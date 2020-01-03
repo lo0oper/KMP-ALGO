@@ -1,0 +1,65 @@
+#include <iostream>
+#include<bits/stdc++.h>
+#include<string>
+using namespace std;
+void callps(string p,int m,int lps[]);
+void kmp(string p, string t){
+    int m,n;
+    m=p.size();
+    n=t.size();
+    int lps[m];
+    callps(p,m,lps);
+    int i,j;  // i for string and j for traversing in the pattern
+    i=j=0;
+    while(i<n){
+        if(p[j]==t[i]){   // matched so both advance forward
+            i++;
+            j++;
+        }
+        if(j==m){  // j has reached the end of the pattern and has matched then we switch back j one index .
+         cout<<"match found at "<<i-j<<endl;
+         j=lps[j-1];
+        }
+        else if(p[j]!=t[i] and i<n){
+            if(j!=0){
+                j=lps[j-1]; // going to SPsubstrng before the mismatch . this happens till we reach zero in j or matching happends only                             //then will i be incremented
+            }
+            else
+            i=i+1;
+        }
+    }
+    
+    
+}
+void callps(string p,int m,int lps[]){
+    int len=0;          // to store the length of the longest prefox and suffix string
+    lps[0]=0;          //since lps[0] is the value you get if there is no matching till the end .its where you start again searching for                        //suffixpreffix substring
+    int i=1;
+    while(i<m){
+        if(p[i]==p[len]){// when the sunstring for prefix and suffix (SP substrng)is matched .obv for the first time the first letter of                          //the pateern must get repeated for len to increase that is why initailly len =0
+            len++;        // the SP substrng is increased by one length
+            lps[i]=len;
+            i++;
+        }
+        else{                 // when the characters donot match
+            if(len!=0){       // when some SP substrng was found and len was not 0 then we make len the value of the lps[len-1]
+                len=lps[len-1];   // note that i has not been incremented
+            }
+            else{
+                lps[i]=0;
+                i++;
+            }
+            
+        }
+    }
+    
+    
+}
+
+int main() {
+	string p,t;
+	cin>>p;
+	cin>>t;
+	kmp(p,t);
+	
+}	
